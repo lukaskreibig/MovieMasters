@@ -5,20 +5,9 @@ import { PossibleTypeExtensionsRule } from 'graphql';
 
 export default function Home({navigation}) {
 
-    const [upcomingMovies, setUpcomingMovies] = useState([]);
-    const [saveMovie, setSaveMovie] = useState([]);
     const [text, onChangeText] = useState('');
     const [searchActive, setSearchActive] = useState(false);
 
-    // const TEST = gql`
-    // query TestMovie {
-    // movieDetail(id:40336) 
-    // {
-    // movie
-    //     {original_title}
-    // }
-    // }
-    // `
 
     // const UPCOMING_MOVIES = gql`
     // query UpcomingMovies {
@@ -41,15 +30,6 @@ export default function Home({navigation}) {
         }
     }`
 
-    // const TestOne = useQuery(TEST).data
-    // const TestMany = useQuery(UPCOMING_MOVIES).data
-
-
-
-    // useEffect(() => {
-    //     TestOne ? setSaveMovie(TestOne.movieDetail.movie.original_title) : null
-    //     TestMany ? setUpcomingMovies(TestMany.upcomingMovies.movies) : null
-    //   }, [TestOne, TestMany]);
 
         const [searchNow, {loading, error, data}] = useLazyQuery(SEARCH_MOVIE, {
             variables: {
@@ -87,14 +67,6 @@ export default function Home({navigation}) {
      
             {searchActive ? (
                 <>
-                    {/* <Text>
-                        This one particular movie: {saveMovie}
-                    </Text>
-                    <Text>
-                        Upcoming Movies: {upcomingMovies.map(movie => (
-                            <Text style={styles.movies}> {movie.original_title} </Text>
-                        ))}
-                    </Text> */}
                     {!loading && data ? (
                     <Text>
                         {data.searchMovie.movies.map(movie => (
@@ -102,7 +74,7 @@ export default function Home({navigation}) {
                                     <Text style={styles.movies} numberOfLines={2}> {movie.original_title} </Text>
                                     <Text style={styles.ratings}>  {movie.vote_average}  </Text>
                                 <Pressable onPress={() =>
-                                    navigation.navigate('Detail', { id: movie.id })
+                                    navigation.navigate('Detail', { id: movie.id, title: movie.original_title, poster: movie.poster_path, ratings: movie.vote_average })
                                 }>
                                     <Image
                                     style={styles.poster}

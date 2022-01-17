@@ -4,17 +4,34 @@ import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuer
 import { PossibleTypeExtensionsRule } from 'graphql';
 
 export default function Detail({navigation, route}) {
+
+
+
     return (
-        <Text>
-            {route.params.id}
-        </Text>
+        <SafeAreaView style={styles.container}>
+            <Text>
+                Movie Details
+            </Text>
+            <Text>
+            {route.params.title}
+            </Text>
+            <Text>
+            {route.params.ratings}
+            </Text>
+            <Image
+            style={styles.poster}                   
+            source={{
+            uri: 'https://image.tmdb.org/t/p/w185'+route.params.poster,
+            }}
+            />
+        </SafeAreaView>
         
     );
 }
 
 const styles = StyleSheet.create({
-    searchContainer: {
-        marginTop: 50,
+    container: {
+        marginTop: 100,
         width: "100%",
         height: 90,
         flexDirection: 'column',
