@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuery } from '@apollo/client';
 import { PossibleTypeExtensionsRule } from 'graphql';
 
-export default function Home() {
+export default function Home({navigation}) {
 
     const [upcomingMovies, setUpcomingMovies] = useState([]);
     const [saveMovie, setSaveMovie] = useState([]);
@@ -99,10 +99,11 @@ export default function Home() {
                     <Text>
                         {data.searchMovie.movies.map(movie => (
                             <View style={styles.movieThumb}> 
-
-                                    <Text style={styles.movies}> {movie.original_title} </Text>
+                                    <Text style={styles.movies} numberOfLines={2}> {movie.original_title} </Text>
                                     <Text style={styles.ratings}>  {movie.vote_average}  </Text>
-                                <Pressable>
+                                <Pressable onPress={() =>
+                                    navigation.navigate('Detail', { id: movie.id })
+                                }>
                                     <Image
                                     style={styles.poster}
                                     
@@ -140,11 +141,12 @@ const styles = StyleSheet.create({
         height: 40,
     },
     movies: {
-        height: 90,
+        height: 34,
         flexWrap: 'wrap',
+        textAlign: 'center'
     },
     ratings: {
-        height: 30,
+        height: 15,
     },
     poster: {
         width: 100,
