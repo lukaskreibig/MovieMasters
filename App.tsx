@@ -5,8 +5,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './components/Home';
 import Detail from './components/Detail';
+import NetInfo from "@react-native-community/netinfo";
+
 
 const Stack = createNativeStackNavigator();
+
+const unsubscribe = NetInfo.addEventListener(state => {
+  console.log("Connection type", state.type);
+  console.log("Is connected?", state.isConnected);
+});
 
 const client = new ApolloClient({
   uri: 'https://ql-movie-api.herokuapp.com/graphql',

@@ -48,17 +48,6 @@ export default function Detail({navigation, route}) {
         }
     }
 
-    
-
-
-    // let favourites = {  
-    //     id: route.params.id,
-    //     title: route.params.title,
-    //     ratings: route.params.ratings,  
-    //     poster: route.params.poster 
-    //   }  
- 
-
     return (
         <SafeAreaView style={styles.container}>
             <Text>
