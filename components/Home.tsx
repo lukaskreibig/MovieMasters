@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, ScrollView } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, ScrollView, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuery } from '@apollo/client';
 import { PossibleTypeExtensionsRule } from 'graphql';
@@ -36,7 +36,7 @@ export default function Home() {
         searchMovie(query: $userSearch)
         {movies
             {
-                original_title, poster_path, overview, vote_average
+                original_title, poster_path, overview, vote_average, id
             }
         }
     }`
@@ -99,17 +99,18 @@ export default function Home() {
                     <Text>
                         {data.searchMovie.movies.map(movie => (
                             <View style={styles.movieThumb}> 
-                            
+
                                     <Text style={styles.movies}> {movie.original_title} </Text>
-                                    <Text style={styles.movies}>  {movie.vote_average}  </Text>
-
-                                <Image
-                                style={styles.poster}
-                                source={{
-                                uri: 'https://image.tmdb.org/t/p/w185'+movie.poster_path,
-                                }}
-                                />
-
+                                    <Text style={styles.ratings}>  {movie.vote_average}  </Text>
+                                <Pressable>
+                                    <Image
+                                    style={styles.poster}
+                                    
+                                    source={{
+                                    uri: 'https://image.tmdb.org/t/p/w185'+movie.poster_path,
+                                    }}
+                                    />
+                                </Pressable>
                             </View>
                         ))}
                     </Text>
@@ -139,16 +140,23 @@ const styles = StyleSheet.create({
         height: 40,
     },
     movies: {
+        height: 90,
+        flexWrap: 'wrap',
+    },
+    ratings: {
+        height: 30,
     },
     poster: {
         width: 100,
-        height: 150
+        height: 150,
     },
     movieThumb: {
         flexDirection: 'column',
         padding: 10,
         justifyContent: 'space-evenly',
-        alignSelf: 'center',
+        alignItems: 'center',
+        alignSelf: 'flex-end',
+        height: 300,
         width: "30%",
     },
 
