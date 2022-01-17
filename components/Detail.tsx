@@ -1,11 +1,61 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, ScrollView, Pressable } from 'react-native';
-import { useEffect, useState } from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuery } from '@apollo/client';
-import { PossibleTypeExtensionsRule } from 'graphql';
+import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect } from 'react';
+import { removeArgumentsFromDocument } from '@apollo/client/utilities';
+
+
 
 export default function Detail({navigation, route}) {
 
+      const storeData = async (value:any) => {
+        try {
+        const jsonValue = JSON.stringify(value)
+        await AsyncStorage.setItem('favourites', jsonValue)
+        alert('Data successfully saved')
+        } catch (e) {
+            alert('Failed to save the data to the storage')
+        }
+    }
 
+      const handleSaveData = async () => {
+        let movie = {  
+                id: route.params.id,
+                original_title: route.params.title,
+                vote_average: route.params.ratings,  
+                poster_path: route.params.poster 
+              }  
+              storeData(movie)
+      }
+
+      const removeData = async () => {
+        try {
+          await AsyncStorage.removeItem('@favourites')
+        } catch(e) {
+            alert('Failed to remove the data from storage')
+        }
+      
+        console.log('Done.')
+      }
+
+        const clearStorage = async () => {
+        try {
+        await AsyncStorage.clear()
+        alert('Storage successfully cleared!')
+        } catch (e) {
+        alert('Failed to clear the async storage.')
+        }
+    }
+
+    
+
+
+    // let favourites = {  
+    //     id: route.params.id,
+    //     title: route.params.title,
+    //     ratings: route.params.ratings,  
+    //     poster: route.params.poster 
+    //   }  
+ 
 
     return (
         <SafeAreaView style={styles.container}>
@@ -24,6 +74,36 @@ export default function Detail({navigation, route}) {
             uri: 'https://image.tmdb.org/t/p/w185'+route.params.poster,
             }}
             />
+            <Button
+                    style={styles.button}
+                    onPress={() => handleSaveData()}
+                    title="Add to Favourites"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                />
+                <Button
+                    style={styles.button}
+                    onPress={() => removeData()}
+                    title="Remove from Favourites"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                />
+                <Button
+                    style={styles.button}
+                    onPress={() => navigation.push('Home')
+                }
+                    title="Back to Main Screen"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                />
+                <Button
+                    style={styles.button}
+                    onPress={() => clearStorage()
+                }
+                    title="Delete All Favourites"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                />
         </SafeAreaView>
         
     );
@@ -31,7 +111,7 @@ export default function Detail({navigation, route}) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 100,
+        marginTop: 130,
         width: "100%",
         height: 90,
         flexDirection: 'column',

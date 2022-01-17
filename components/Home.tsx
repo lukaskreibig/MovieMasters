@@ -1,12 +1,14 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, ScrollView, Pressable } from 'react-native';
+import {  StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, ScrollView, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuery } from '@apollo/client';
-import { PossibleTypeExtensionsRule } from 'graphql';
 
 export default function Home({navigation}) {
 
     const [text, onChangeText] = useState('');
     const [searchActive, setSearchActive] = useState(false);
+    const [favourites, setFavourites] = useState<any>("")
 
 
     // const UPCOMING_MOVIES = gql`
@@ -44,8 +46,58 @@ export default function Home({navigation}) {
         searchNow()
     }
 
+
+    const getData = async () => {
+        try {
+          const jsonValue = await AsyncStorage.getItem('@favourites')
+          return jsonValue != null ? JSON.parse(jsonValue) : null;
+        }
+        catch(e) {
+            alert('Failed to fetch the data from storage')
+        }
+      }
+
+      const importData = async () => {
+        try {
+          const keys = await AsyncStorage.getAllKeys();
+          const result = await AsyncStorage.multiGet(keys);
+           return result.map(req => JSON.parse(req[1]))
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+
+    useEffect(() => {
+        importData().then(data => {setFavourites(data), console.log("This is then", favourites)})
+    }, [])
+
     return (
         <ScrollView>
+            <View> 
+            {favourites ? (
+                    <Text>
+                            {favourites.map(movie => (
+                            <View style={styles.movieThumb}> 
+                                    <Text style={styles.movies} numberOfLines={2}> {movie.original_title} </Text>
+                                    <Text style={styles.ratings}>  {movie.vote_average}  </Text>
+                                <Pressable onPress={() =>
+                                    navigation.navigate('Detail', { id: movie.id, title: movie.original_title, poster: movie.poster_path, ratings: movie.vote_average })
+                                }>
+                                    <Image
+                                    style={styles.poster}
+                                    
+                                    source={{
+                                    uri: 'https://image.tmdb.org/t/p/w185'+movie.poster_path,
+                                    }}
+                                    />
+                                </Pressable>
+                            </View>
+                        ))}
+                    </Text>
+                    ) : (<ActivityIndicator />)}
+            </View>
+
             <View
                 style={styles.searchContainer}
             >
