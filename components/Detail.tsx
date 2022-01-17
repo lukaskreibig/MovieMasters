@@ -10,7 +10,7 @@ export default function Detail({navigation, route}) {
       const storeData = async (value:any) => {
         try {
         const jsonValue = JSON.stringify(value)
-        await AsyncStorage.setItem('favourites', jsonValue)
+        await AsyncStorage.setItem(String(value.id), jsonValue)
         alert('Data successfully saved')
         } catch (e) {
             alert('Failed to save the data to the storage')
@@ -22,14 +22,16 @@ export default function Detail({navigation, route}) {
                 id: route.params.id,
                 original_title: route.params.title,
                 vote_average: route.params.ratings,  
-                poster_path: route.params.poster 
+                poster_path: route.params.poster,
+                goodorbad: true,
+
               }  
               storeData(movie)
       }
 
       const removeData = async () => {
         try {
-          await AsyncStorage.removeItem('@favourites')
+          await AsyncStorage.removeItem((String(route.params.id)))
         } catch(e) {
             alert('Failed to remove the data from storage')
         }

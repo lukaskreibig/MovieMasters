@@ -60,6 +60,7 @@ export default function Home({navigation}) {
       const importData = async () => {
         try {
           const keys = await AsyncStorage.getAllKeys();
+          console.log(keys)
           const result = await AsyncStorage.multiGet(keys);
            return result.map(req => JSON.parse(req[1]))
         } catch (error) {
@@ -71,6 +72,10 @@ export default function Home({navigation}) {
     useEffect(() => {
         importData().then(data => {setFavourites(data), console.log("This is then", favourites)})
     }, [])
+
+    useEffect(() => {
+        console.log(favourites)
+    })
 
     return (
         <ScrollView>
@@ -110,7 +115,7 @@ export default function Home({navigation}) {
 
                 <Button
                     style={styles.button}
-                    onPress={activateSearch}
+                    onPress={text ? activateSearch : null}
                     title="Search"
                     color="#841584"
                     accessibilityLabel="Learn more about this purple button"
