@@ -1,12 +1,11 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator } from 'react-native';
 import { useEffect, useState } from 'react';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, QueryResult } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuery } from '@apollo/client';
 
 export default function Home() {
 
     const [upcomingMovies, setUpcomingMovies] = useState([]);
     const [saveMovie, setSaveMovie] = useState([]);
-    const [searchMovie, setSearchMovie] = useState([]);
     const [text, onChangeText] = useState('');
     const [searchActive, setSearchActive] = useState(false);
 
@@ -29,9 +28,11 @@ export default function Home() {
     //     }
     // `
 
+    {console.log(text)}
+
     const SEARCH_MOVIE = gql`
-    query SearchMovies {
-        searchMovie(query: "Terminator")
+    query SearchMovies($userSearch: String!) {
+        searchMovie(query: $userSearch)
         {movies
             {
                 original_title
@@ -41,19 +42,25 @@ export default function Home() {
 
     // const TestOne = useQuery(TEST).data
     // const TestMany = useQuery(UPCOMING_MOVIES).data
-    const TestSearch = useQuery(SEARCH_MOVIE).data
+
+
 
     // useEffect(() => {
     //     TestOne ? setSaveMovie(TestOne.movieDetail.movie.original_title) : null
     //     TestMany ? setUpcomingMovies(TestMany.upcomingMovies.movies) : null
     //   }, [TestOne, TestMany]);
 
-      useEffect(() => {
-        TestSearch ? setSearchMovie(TestSearch) : null
-      }, [TestSearch])
+        const [searchNow, {loading, error, data}] = useLazyQuery(SEARCH_MOVIE, {
+            variables: {
+                userSearch: "Terminator"
+            }
+        })
+    
+        console.log(loading, error, data)
 
     const activateSearch = () => {
-        !setSearchActive
+        setSearchActive(!searchActive);
+        searchNow()
     }
 
     return (
@@ -77,7 +84,7 @@ export default function Home() {
                 />
             </View>
      
-            {!searchActive ? (
+            {searchActive ? (
                 <>
                     {/* <Text>
                         This one particular movie: {saveMovie}
@@ -87,13 +94,13 @@ export default function Home() {
                             <Text style={styles.movies}> {movie.original_title} </Text>
                         ))}
                     </Text> */}
-                    {searchMovie ? (
+                    {!loading && data ? (
                     <Text>
-                        Search {searchMovie.searchMovie.movies.map(movie => (
+                        Search {data.searchMovie.movies.map(movie => (
                             <Text style={styles.movies}> {movie.original_title} </Text>
                         ))}
                     </Text>
-                    ) : null}
+                    ) : (<ActivityIndicator />)}
                 </>
             ) : (
                 null
@@ -105,7 +112,7 @@ export default function Home() {
 const styles = StyleSheet.create({
     searchContainer: {
         width: "100%",
-        height:90,
+        height: 90,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
@@ -115,7 +122,7 @@ const styles = StyleSheet.create({
     input: {
     },
     button: {
-    height: 20
+        height: 40,
     },
     movies: {
     },
