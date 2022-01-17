@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, QueryResult } from '@apollo/client';
+import Home from './components/Home';
 
 
 
@@ -12,23 +13,14 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-const TEST = gql`
-  query TestMovie {
-    movieDetail(id:40336) 
-    {
-    movie
-      {original_title}
-    }
-  }
-`
-const movieData:QueryResult<any> = useQuery(TEST)
-console.log(movieData)
-
 export default function App() {
+
+
   return (
     <ApolloProvider client={client}>
 
     <View style={styles.container}>
+      <Home />
       <Text>Open up App.tsx to start working on your app!</Text>
       <StatusBar style="auto" />
     </View>
