@@ -1,6 +1,7 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuery } from '@apollo/client';
+import { PossibleTypeExtensionsRule } from 'graphql';
 
 export default function Home() {
 
@@ -35,7 +36,7 @@ export default function Home() {
         searchMovie(query: $userSearch)
         {movies
             {
-                original_title
+                original_title, poster_path, overview, vote_average
             }
         }
     }`
@@ -52,7 +53,7 @@ export default function Home() {
 
         const [searchNow, {loading, error, data}] = useLazyQuery(SEARCH_MOVIE, {
             variables: {
-                userSearch: "Terminator"
+                userSearch: text
             }
         })
     
@@ -64,7 +65,7 @@ export default function Home() {
     }
 
     return (
-        <>
+        <ScrollView>
             <View
                 style={styles.searchContainer}
             >
@@ -96,8 +97,20 @@ export default function Home() {
                     </Text> */}
                     {!loading && data ? (
                     <Text>
-                        Search {data.searchMovie.movies.map(movie => (
-                            <Text style={styles.movies}> {movie.original_title} </Text>
+                        {data.searchMovie.movies.map(movie => (
+                            <View style={styles.movieThumb}> 
+                            
+                                    <Text style={styles.movies}> {movie.original_title} </Text>
+                                    <Text style={styles.movies}>  {movie.vote_average}  </Text>
+
+                                <Image
+                                style={styles.poster}
+                                source={{
+                                uri: 'https://image.tmdb.org/t/p/w185'+movie.poster_path,
+                                }}
+                                />
+
+                            </View>
                         ))}
                     </Text>
                     ) : (<ActivityIndicator />)}
@@ -105,12 +118,13 @@ export default function Home() {
             ) : (
                 null
             )}
-        </>
+        </ScrollView>
     ); 
 }
 
 const styles = StyleSheet.create({
     searchContainer: {
+        marginTop: 50,
         width: "100%",
         height: 90,
         flexDirection: 'column',
@@ -126,4 +140,16 @@ const styles = StyleSheet.create({
     },
     movies: {
     },
+    poster: {
+        width: 100,
+        height: 150
+    },
+    movieThumb: {
+        flexDirection: 'column',
+        padding: 10,
+        justifyContent: 'space-evenly',
+        alignSelf: 'center',
+        width: "30%",
+    },
+
   });
