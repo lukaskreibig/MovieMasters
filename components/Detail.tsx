@@ -17,13 +17,13 @@ export default function Detail({navigation, route}) {
         }
     }
 
-      const handleSaveData = async () => {
+      const handleSaveData = async (toggle:boolean) => {
         let movie = {  
                 id: route.params.id,
                 original_title: route.params.title,
                 vote_average: route.params.ratings,  
                 poster_path: route.params.poster,
-                goodorbad: true,
+                hide: toggle
 
               }  
               storeData(movie)
@@ -67,7 +67,7 @@ export default function Detail({navigation, route}) {
             />
             <Button
                     style={styles.button}
-                    onPress={() => handleSaveData()}
+                    onPress={() => handleSaveData(false)}
                     title="Add to Favourites"
                     color="#841584"
                     accessibilityLabel="Learn more about this purple button"
@@ -92,6 +92,14 @@ export default function Detail({navigation, route}) {
                     onPress={() => clearStorage()
                 }
                     title="Delete All Favourites"
+                    color="#841584"
+                    accessibilityLabel="Learn more about this purple button"
+                />
+                <Button
+                    style={styles.button}
+                    onPress={() => handleSaveData(true)
+                }
+                    title="Hide from Search"
                     color="#841584"
                     accessibilityLabel="Learn more about this purple button"
                 />

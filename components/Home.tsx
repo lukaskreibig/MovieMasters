@@ -9,18 +9,8 @@ export default function Home({navigation}) {
     const [text, onChangeText] = useState('');
     const [searchActive, setSearchActive] = useState(false);
     const [favourites, setFavourites] = useState<any>("")
+    const [hide, setHide] = useState()
 
-
-    // const UPCOMING_MOVIES = gql`
-    // query UpcomingMovies {
-    //     upcomingMovies
-    //         {movies
-    //             {original_title}
-    //         }
-    //     }
-    // `
-
-    {console.log(text)}
 
     const SEARCH_MOVIE = gql`
     query SearchMovies($userSearch: String!) {
@@ -60,7 +50,6 @@ export default function Home({navigation}) {
       const importData = async () => {
         try {
           const keys = await AsyncStorage.getAllKeys();
-          console.log(keys)
           const result = await AsyncStorage.multiGet(keys);
            return result.map(req => JSON.parse(req[1]))
         } catch (error) {
@@ -70,11 +59,28 @@ export default function Home({navigation}) {
 
 
     useEffect(() => {
-        importData().then(data => {setFavourites(data), console.log("This is then", favourites)})
+        importData().then(data => {
+            setFavourites(data); 
+            console.log[data];
+            const hiddenMovies = Object.fromEntries(
+                Object.entries(data).filter(([key, value]) => key === "hide" && value === true) )
+                console.log("HiddenMovies", hiddenMovies)
+             // filteredByValue = {V: 5} 
+            
+            // setHide(data); 
+            // console.log("Typeof", typeof data);
+            // let hiddenMovies = data.filter(obj => console.log("filterobj", obj));
+            // console.log("hiddenMovies after filtering", hiddenMovies);
+            // setHide(hiddenMovies)
+            // console.log("Hide is this now", hide)
+            // console.log(typeof hide)
+        
+        
+        })   
     }, [])
 
     useEffect(() => {
-        console.log(favourites)
+        // console.log(favourites)
     })
 
     return (
@@ -82,7 +88,8 @@ export default function Home({navigation}) {
             <View> 
             {favourites ? (
                     <Text>
-                            {favourites.map(movie => (
+                            {favourites.filter(movie => movie.hide != true).map(movie => (
+
                             <View style={styles.movieThumb}> 
                                     <Text style={styles.movies} numberOfLines={2}> {movie.original_title} </Text>
                                     <Text style={styles.ratings}>  {movie.vote_average}  </Text>
