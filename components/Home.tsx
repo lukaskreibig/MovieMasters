@@ -2,14 +2,15 @@ import {  StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, S
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
+import { PossibleTypeExtensionsRule } from 'graphql';
 
 export default function Home({navigation}) {
 
     const [text, onChangeText] = useState('');
     const [searchActive, setSearchActive] = useState(false);
     const [favourites, setFavourites] = useState<any>("")
-    const [hide, setHide] = useState()
+    const [hideIt, setHide] = useState()
 
 
     const SEARCH_MOVIE = gql`
@@ -29,7 +30,7 @@ export default function Home({navigation}) {
             }
         })
     
-        console.log(loading, error, data)
+        // console.log(loading, error, data)
 
     const activateSearch = () => {
         setSearchActive(!searchActive);
@@ -39,7 +40,7 @@ export default function Home({navigation}) {
 
     const getData = async () => {
         try {
-          const jsonValue = await AsyncStorage.getItem('@favourites')
+            const jsonValue = await AsyncStorage.getItem('@favourites')
           return jsonValue != null ? JSON.parse(jsonValue) : null;
         }
         catch(e) {
@@ -60,35 +61,19 @@ export default function Home({navigation}) {
 
     useEffect(() => {
         importData().then(data => {
-            setFavourites(data); 
-            console.log[data];
-            const hiddenMovies = Object.fromEntries(
-                Object.entries(data).filter(([key, value]) => key === "hide" && value === true) )
-                console.log("HiddenMovies", hiddenMovies)
-             // filteredByValue = {V: 5} 
-            
-            // setHide(data); 
-            // console.log("Typeof", typeof data);
-            // let hiddenMovies = data.filter(obj => console.log("filterobj", obj));
-            // console.log("hiddenMovies after filtering", hiddenMovies);
-            // setHide(hiddenMovies)
-            // console.log("Hide is this now", hide)
-            // console.log(typeof hide)
-        
-        
+            setFavourites(data)
+            let hiddenMovies:any = data.filter(obj => obj.hide == true);
+            setHide(hiddenMovies);
         })   
     }, [])
 
-    useEffect(() => {
-        // console.log(favourites)
-    })
 
     return (
         <ScrollView>
             <View> 
             {favourites ? (
                     <Text>
-                            {favourites.filter(movie => movie.hide != true).map(movie => (
+                            {favourites.map(movie => (
 
                             <View style={styles.movieThumb}> 
                                     <Text style={styles.movies} numberOfLines={2}> {movie.original_title} </Text>
@@ -128,25 +113,29 @@ export default function Home({navigation}) {
                     accessibilityLabel="Learn more about this purple button"
                 />
             </View>
-     
+
+
             {searchActive ? (
                 <>
                     {!loading && data ? (
                     <Text>
-                        {data.searchMovie.movies.map(movie => (
+                        {data.searchMovie.movies.filter(obj => !hideIt.some(hidden => (hidden.hide ? hidden.id : null) === obj.id)).map(movie => (
                             <View style={styles.movieThumb}> 
                                     <Text style={styles.movies} numberOfLines={2}> {movie.original_title} </Text>
-                                    <Text style={styles.ratings}>  {movie.vote_average}  </Text>
+                                    <Text style={styles.ratings}> {movie.vote_average ? movie.vote_average : ("N/A") } </Text>
                                 <Pressable onPress={() =>
                                     navigation.navigate('Detail', { id: movie.id, title: movie.original_title, poster: movie.poster_path, ratings: movie.vote_average })
                                 }>
-                                    <Image
-                                    style={styles.poster}
-                                    
-                                    source={{
-                                    uri: 'https://image.tmdb.org/t/p/w185'+movie.poster_path,
-                                    }}
-                                    />
+                                        <Image
+                                        style={styles.poster}
+
+                                        source={
+                                            movie.poster_path ? 
+                                                {uri: 'https://image.tmdb.org/t/p/w185'+movie.poster_path,}
+                                             : 
+                                                require('../assets/not-available.jpg')
+                                        }
+                                        />        
                                 </Pressable>
                             </View>
                         ))}

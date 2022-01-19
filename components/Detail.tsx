@@ -1,7 +1,5 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, View, Button, ActivityIndicator, Image, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState, useEffect } from 'react';
-import { removeArgumentsFromDocument } from '@apollo/client/utilities';
 
 
 
