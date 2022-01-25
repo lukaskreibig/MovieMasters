@@ -9,7 +9,8 @@ import {
   ScrollView,
   Pressable,
   Modal,
-  ToastAndroid
+  ToastAndroid,
+  ImageBackground
 } from "react-native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -89,16 +90,21 @@ export default function Home({ navigation }) {
   }, []);
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.scrollview}>
       <View>
+        <View style={styles.headlineContainer}>
+          <Text style={styles.headline}>
+            MovieMasters
+          </Text>
+        </View>
         {favourites ? (
+          
+        <>
+          <Text style={styles.favText}> Favourites </Text>
           <Text>
+            <ScrollView horizontal={true}>
             {favourites.map((movie) => (
-              <View style={styles.movieThumb}>
-                <Text style={styles.movies} numberOfLines={2}>
-                  {movie.original_title}
-                </Text>
-                <Text style={styles.ratings}> {movie.vote_average} </Text>
+              <View style={styles.favouriteThumb}>
                 <Pressable
                   onPress={() =>
                     navigation.navigate("Detail", {
@@ -109,41 +115,55 @@ export default function Home({ navigation }) {
                     })
                   }
                 >
-                  <Image
+                  <ImageBackground
                     style={styles.poster}
+                    imageStyle={{ borderRadius: 8}}
                     source={{
                       uri:
                         "https://image.tmdb.org/t/p/w185" + movie.poster_path,
                     }}
-                  />
+                  >
+                    <Text style={styles.text} numberOfLines={3}>
+                  {movie.original_title} {"\n"} IMDB: {movie.vote_average}</Text>
+                    </ImageBackground>
+
+
+
                 </Pressable>
               </View>
             ))}
+            </ScrollView>
           </Text>
+          </>
         ) : (
           <ActivityIndicator />
         )}
       </View>
 
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          placeholder="Movie Name"
-          value={text}
-        />
 
-        <Button
-          style={styles.button}
-          onPress={text ? activateSearch : null}
-          title="Search"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
+      <View style={styles.searchContainer}>
+        <>
+          <Text style={styles.searchHeader}> Search </Text>
+          <TextInput
+            style={styles.searchField}
+            onChangeText={onChangeText}
+            placeholder="Movie Name..."
+            placeholderTextColor="darkgrey" 
+            value={text}
+          />
+
+          <Button
+            style={styles.button}
+            onPress={text ? activateSearch : null}
+            title="Submit"
+            color="white"
+            accessibilityLabel="Learn more about this purple button"
+          />
+        </>
       </View>
 
       {searchActive ? (
-        <>
+        <ScrollView horizontal={true}>
           {!loading && data ? (
             <Text>
               {data.searchMovie.movies
@@ -155,12 +175,6 @@ export default function Home({ navigation }) {
                 )
                 .map((movie) => (
                   <View style={styles.movieThumb}>
-                    <Text style={styles.movies} numberOfLines={2}>
-                      {movie.original_title}
-                    </Text>
-                    <Text style={styles.ratings}>
-                      {movie.vote_average ? movie.vote_average : "N/A"}
-                    </Text>
                     <Pressable
                       onPress={() =>
                         navigation.navigate("Detail", {
@@ -171,18 +185,26 @@ export default function Home({ navigation }) {
                         })
                       }
                     >
-                      <Image
-                        style={styles.poster}
-                        source={
-                          movie.poster_path
-                            ? {
-                                uri:
-                                  "https://image.tmdb.org/t/p/w185" +
-                                  movie.poster_path,
-                              }
-                            : require("../assets/not-available.jpg")
-                        }
-                      />
+
+                    <ImageBackground
+                    style={styles.posterSearch}
+                    imageStyle={{ borderRadius: 8}}
+                    source={
+                      movie.poster_path
+                        ? {
+                            uri:
+                              "https://image.tmdb.org/t/p/w185" +
+                              movie.poster_path,
+                          }
+                        : require("../assets/not-available.jpg")
+                    }
+                  >
+                    <Text style={styles.text} numberOfLines={3}>
+                  {movie.original_title} {"\n"} IMDB: {movie.vote_average ? movie.vote_average : "N/A"}</Text>
+                    </ImageBackground> 
+
+
+
                     </Pressable>
                   </View>
                 ))}
@@ -190,45 +212,108 @@ export default function Home({ navigation }) {
           ) : (
             <ActivityIndicator />
           )}
-        </>
+        </ScrollView>
       ) : null}
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollview: {
+    backgroundColor: "black",
+  },
+
+  favText: {
+    color: "white",
+    paddingBottom: 20,
+    paddingTop: 20,
+    fontSize: 25,
+    fontWeight: "200",
+  },
+  text: {  
+    color: "white",
+  fontSize: 15,
+  lineHeight: 24,
+  fontWeight: "300",
+  textAlign: "center",
+  backgroundColor: "#000000c0",
+  },
+  headlineContainer: {
+    marginTop: 60,
+    width: "100%",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  headline: {
+    fontSize: 50,
+    fontWeight: "100",
+    color: "white"
+  },
   searchContainer: {
-    marginTop: 50,
     width: "100%",
     height: 90,
-    flexDirection: "column",
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    alignSelf: "center",
+    alignContent: "center",
     paddingBottom: 10,
   },
+  searchHeader: {
+    color: "white",
+    fontSize: 25,
+    fontWeight: "200",
+  },
+  searchField: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "200",
+    width: "50%",
+    borderWidth: 2,
+    padding: 7,
+    borderColor: "darkgrey",
+    borderRadius: 10
+  },
   button: {
-    height: 40,
+    fontSize: 20,
+    fontWeight: "200",
+  },
+  input: {
+    textAlign: "center",
+    fontSize: 20,
+    color: "white"
   },
   movies: {
     height: 34,
     flexWrap: "wrap",
     textAlign: "center",
+    fontWeight: "600",
+    color: "white",
   },
   ratings: {
     height: 15,
+    fontWeight: "300",
+    color: "white"
   },
   poster: {
     width: 100,
     height: 150,
+    justifyContent: "flex-end",
+  },
+  posterSearch: {
+    width: 200,
+    height: 300,
+    justifyContent: "flex-end",
+  },
+  favouriteThumb: {
+    padding: 6,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
   },
   movieThumb: {
-    flexDirection: "column",
-    padding: 10,
-    justifyContent: "space-evenly",
+    padding: 6,
+    justifyContent: "center",
     alignItems: "center",
-    alignSelf: "flex-end",
-    height: 300,
-    width: "30%",
+    alignContent: "center",
   },
 });
