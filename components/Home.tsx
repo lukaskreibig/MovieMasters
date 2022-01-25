@@ -10,7 +10,9 @@ import {
   Pressable,
   Modal,
   ToastAndroid,
-  ImageBackground
+  ImageBackground,
+  Dimensions,
+  SafeAreaView
 } from "react-native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -19,6 +21,8 @@ import { gql, useLazyQuery } from "@apollo/client";
 import NetInfo from "@react-native-community/netinfo";
 import { withOrientation } from "react-navigation";
 import { FlipInEasyX } from "react-native-reanimated";
+
+const windowHeight = Dimensions.get('window').height;
 
 export default function Home({ navigation }) {
   const [text, onChangeText] = useState("");
@@ -90,6 +94,7 @@ export default function Home({ navigation }) {
   }, []);
 
   return (
+    <SafeAreaView style={{ backgroundColor: "black" }}>
     <ScrollView style={styles.scrollview}>
       <View>
         <View style={styles.headlineContainer}>
@@ -101,6 +106,9 @@ export default function Home({ navigation }) {
           
         <>
           <Text style={styles.favText}> Favourites </Text>
+
+          {favourites[0] ? (
+
           <Text>
             <ScrollView horizontal={true}>
             {favourites.map((movie) => (
@@ -124,7 +132,7 @@ export default function Home({ navigation }) {
                     }}
                   >
                     <Text style={styles.text} numberOfLines={3}>
-                  {movie.original_title} {"\n"} IMDB: {movie.vote_average}</Text>
+                  {movie.original_title} {"\n"} IMDB: {movie.vote_average ? movie.vote_average : "N/A"}</Text>
                     </ImageBackground>
 
 
@@ -134,6 +142,8 @@ export default function Home({ navigation }) {
             ))}
             </ScrollView>
           </Text>
+
+        ) : (<Text style={styles.noFavourites}> No Favourites Yet </Text>)}
           </>
         ) : (
           <ActivityIndicator />
@@ -199,7 +209,7 @@ export default function Home({ navigation }) {
                         : require("../assets/not-available.jpg")
                     }
                   >
-                    <Text style={styles.text} numberOfLines={3}>
+                    <Text style={styles.textSearch} numberOfLines={3}>
                   {movie.original_title} {"\n"} IMDB: {movie.vote_average ? movie.vote_average : "N/A"}</Text>
                     </ImageBackground> 
 
@@ -215,14 +225,15 @@ export default function Home({ navigation }) {
         </ScrollView>
       ) : null}
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   scrollview: {
     backgroundColor: "black",
+    height: "100%",
   },
-
   favText: {
     color: "white",
     paddingBottom: 20,
@@ -230,16 +241,33 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "200",
   },
-  text: {  
+    text: {  
     color: "white",
-  fontSize: 15,
-  lineHeight: 24,
+    fontSize: 15,
+    lineHeight: 24,
+    fontWeight: "300",
+    textAlign: "center",
+    backgroundColor: "#000000c0",
+    },
+    noFavourites: {
+      color: "white",
+      alignSelf: "center",
+      paddingTop: 60,
+      height: windowHeight / 4.8,
+      fontSize: 25,
+      fontWeight: "200",
+      fontStyle: "italic"
+    },
+  textSearch: {  
+    color: "white",
+  fontSize: 20,
+  lineHeight: 30,
   fontWeight: "300",
   textAlign: "center",
   backgroundColor: "#000000c0",
   },
   headlineContainer: {
-    marginTop: 60,
+    marginTop: 0,
     width: "100%",
     flexDirection: "column",
     alignItems: "center",
@@ -295,13 +323,13 @@ const styles = StyleSheet.create({
     color: "white"
   },
   poster: {
-    width: 100,
-    height: 150,
+    width: windowHeight / 7.2,
+    height: windowHeight / 4.8,
     justifyContent: "flex-end",
   },
   posterSearch: {
-    width: 200,
-    height: 300,
+    width: windowHeight / 3.6,
+    height: windowHeight / 2.4,
     justifyContent: "flex-end",
   },
   favouriteThumb: {
