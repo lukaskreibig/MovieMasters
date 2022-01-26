@@ -8,7 +8,7 @@ import {
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
-  Platform
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,7 +41,7 @@ export default function Home({ navigation }: any) {
     }
   `;
 
-  const [searchNow, { loading, error, data }] = useLazyQuery(SEARCH_MOVIE, {
+  const [searchNow, { loading, data }] = useLazyQuery(SEARCH_MOVIE, {
     variables: {
       userSearch: textSearch,
     },
@@ -177,16 +177,16 @@ const styles = StyleSheet.create({
     color: "white",
     paddingBottom: 20,
     paddingTop: 20,
-    fontSize: Platform.OS === 'android' ? 20 : 25,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
+    fontSize: Platform.OS === "android" ? 20 : 25,
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
   },
   noFavourites: {
     color: "white",
     alignSelf: "center",
     paddingTop: 60,
     height: windowHeight / 4.8,
-    fontSize: Platform.OS === 'android' ? 20 : 25,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
+    fontSize: Platform.OS === "android" ? 20 : 25,
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
     fontStyle: "italic",
   },
   headlineContainer: {
@@ -194,9 +194,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headline: {
-    marginTop: Platform.OS === 'android' ? 35 : 20,
-    fontSize: Platform.OS === 'android' ? 35 : 50,
-    fontWeight: Platform.OS === 'android' ? 'normal' : "100",
+    marginTop: Platform.OS === "android" ? 35 : 20,
+    fontSize: Platform.OS === "android" ? 35 : 50,
+    fontWeight: Platform.OS === "android" ? "normal" : "100",
     color: "white",
   },
   searchContainer: {
@@ -210,25 +210,25 @@ const styles = StyleSheet.create({
   },
   searchHeader: {
     color: "white",
-    fontSize: Platform.OS === 'android' ? 20 : 25,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
+    fontSize: Platform.OS === "android" ? 20 : 25,
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
   },
   searchField: {
     color: "white",
-    fontSize: Platform.OS === 'android' ? 17 : 20,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
+    fontSize: Platform.OS === "android" ? 17 : 20,
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
     width: "50%",
     borderWidth: 2,
-    padding: Platform.OS === 'android' ? 3 : 7,
+    padding: Platform.OS === "android" ? 3 : 7,
     paddingLeft: 12,
     borderColor: "darkgrey",
-    borderRadius: Platform.OS === 'android' ? 13 : 18,
+    borderRadius: Platform.OS === "android" ? 13 : 18,
   },
   button: {
     color: "white",
-    fontSize: Platform.OS === 'android' ? 17 : 20,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
-    padding: 20
+    fontSize: Platform.OS === "android" ? 17 : 20,
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
+    padding: 20,
   },
   input: {
     textAlign: "center",
@@ -237,5 +237,5 @@ const styles = StyleSheet.create({
   },
   activityIndicator: {
     height: windowHeight / 3,
-  }
+  },
 });

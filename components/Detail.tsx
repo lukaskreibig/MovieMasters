@@ -6,7 +6,7 @@ import {
   Pressable,
   ImageBackground,
   TouchableOpacity,
-  Platform
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
@@ -44,7 +44,7 @@ export default function Detail({ navigation, route }: any) {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(String(value.id), jsonValue);
       setFavourite(true);
-      hide ? triggerHidden(value.hide) : (null)
+      hide ? triggerHidden(value.hide) : null;
     } catch (e) {
       showToast("Whoops, saving didn't work out");
     }
@@ -158,19 +158,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   back: {
-    marginTop: Platform.OS === 'android' ? 20 : 0,
+    marginTop: Platform.OS === "android" ? 20 : 0,
     width: "100%",
   },
   backText: {
     color: "white",
     textAlign: "right",
     fontSize: 30,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
   },
   text: {
-    fontSize: Platform.OS === 'android' ? 16 : 18,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
-    marginBottom: Platform.OS === 'android' ? 6 : 14,
+    fontSize: Platform.OS === "android" ? 16 : 18,
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
+    marginBottom: Platform.OS === "android" ? 6 : 14,
     color: "white",
     textAlign: "center",
     borderWidth: 0.5,
@@ -179,9 +179,9 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: "white",
-    fontSize: Platform.OS === 'android' ? 25 : 35,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
-    marginTop: Platform.OS === 'android' ? 10 : 20,
+    fontSize: Platform.OS === "android" ? 25 : 35,
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
+    marginTop: Platform.OS === "android" ? 10 : 20,
     marginBottom: 25,
   },
   buttons: {
@@ -203,10 +203,10 @@ const styles = StyleSheet.create({
   },
   textImage: {
     color: "white",
-    fontSize: Platform.OS === 'android' ? 19 : 22,
+    fontSize: Platform.OS === "android" ? 19 : 22,
     lineHeight: 25,
     padding: 10,
-    fontWeight: Platform.OS === 'android' ? "normal" : "200",
+    fontWeight: Platform.OS === "android" ? "normal" : "200",
     textAlign: "center",
     backgroundColor: "#000000c9",
   },

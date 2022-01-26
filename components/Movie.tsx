@@ -6,7 +6,7 @@ import {
   Pressable,
   ImageBackground,
   Dimensions,
-  Platform
+  Platform,
 } from "react-native";
 
 const windowHeight = Dimensions.get("window").height;
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
     lineHeight: 24,
-    fontWeight: Platform.OS === 'android' ? "normal" : "300",
+    fontWeight: Platform.OS === "android" ? "normal" : "300",
     textAlign: "center",
     backgroundColor: "#000000c0",
   },
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     lineHeight: 30,
-    fontWeight: Platform.OS === 'android' ? "normal" : "300",
+    fontWeight: Platform.OS === "android" ? "normal" : "300",
     textAlign: "center",
     backgroundColor: "#000000c0",
   },
