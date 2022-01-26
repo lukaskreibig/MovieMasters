@@ -67,35 +67,35 @@ export default function Detail({ navigation, route }) {
         style={styles.button}
         onPress={() => handleSaveData(false)}
         title="Add to Favourites"
-        color="#841584"
+        color="white"
         accessibilityLabel="Learn more about this purple button"
       />
       <Button
         style={styles.button}
         onPress={() => removeData()}
         title="Remove from Favourites"
-        color="#841584"
+        color="white"
         accessibilityLabel="Learn more about this purple button"
       />
       <Button
         style={styles.button}
         onPress={() => navigation.push("Home")}
         title="Back to Main Screen"
-        color="#841584"
+        color="white"
         accessibilityLabel="Learn more about this purple button"
       />
       <Button
         style={styles.button}
         onPress={() => clearStorage()}
         title="Delete All Favourites"
-        color="#841584"
+        color="white"
         accessibilityLabel="Learn more about this purple button"
       />
       <Button
         style={styles.button}
         onPress={() => handleSaveData(true)}
         title="Hide from Search"
-        color="#841584"
+        color="white"
         accessibilityLabel="Learn more about this purple button"
       />
     </SafeAreaView>
@@ -104,9 +104,9 @@ export default function Detail({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 130,
+    backgroundColor: "black",
     width: "100%",
-    height: 90,
+    height: "100%",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",

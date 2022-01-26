@@ -5,11 +5,8 @@ import {
   View,
   Button,
   ActivityIndicator,
-  Image,
   ScrollView,
   Pressable,
-  Modal,
-  ToastAndroid,
   ImageBackground,
   Dimensions,
   SafeAreaView
@@ -19,8 +16,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from 'react-native-root-toast'
 import { gql, useLazyQuery } from "@apollo/client";
 import NetInfo from "@react-native-community/netinfo";
-import { withOrientation } from "react-navigation";
-import { FlipInEasyX } from "react-native-reanimated";
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -29,8 +24,7 @@ export default function Home({ navigation }) {
   const [searchActive, setSearchActive] = useState(false);
   const [favourites, setFavourites] = useState<any>("");
   const [hideIt, setHide] = useState();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isOffline, setOfflineStatus] = useState(null);
+  const [isOffline, setOfflineStatus] = useState<any>(null);
 
   const SEARCH_MOVIE = gql`
     query SearchMovies($userSearch: String!) {
@@ -72,7 +66,7 @@ export default function Home({ navigation }) {
   },);
 
   useEffect(() => {
-    isOffline ? showToast("Whoops, seems like you are Offline.") : showToast("You are connected to the Internet.")
+    isOffline ? showToast("Whoops, seems like you are Offline.") : (null)
     }, [isOffline]);
 
   const importData = async () => {
@@ -88,7 +82,7 @@ export default function Home({ navigation }) {
   useEffect(() => {
     importData().then((data) => {
       setFavourites(data);
-      let hiddenMovies: any = data.filter((obj) => obj.hide == true);
+      const hiddenMovies: any = data?.filter((obj) => obj.hide == true);
       setHide(hiddenMovies);
     });
   }, []);
@@ -129,7 +123,7 @@ export default function Home({ navigation }) {
                     source={{
                       uri:
                         "https://image.tmdb.org/t/p/w185" + movie.poster_path,
-                    }}
+                    }} 
                   >
                     <Text style={styles.text} numberOfLines={3}>
                   {movie.original_title} {"\n"} IMDB: {movie.vote_average ? movie.vote_average : "N/A"}</Text>
@@ -173,8 +167,8 @@ export default function Home({ navigation }) {
       </View>
 
       {searchActive ? (
-        <ScrollView horizontal={true}>
-          {!loading && data ? (
+          !loading && data ? (
+            <ScrollView horizontal={true}>
             <Text>
               {data.searchMovie.movies
                 .filter(
@@ -219,10 +213,13 @@ export default function Home({ navigation }) {
                   </View>
                 ))}
             </Text>
+            </ScrollView>
           ) : (
-            <ActivityIndicator />
-          )}
-        </ScrollView>
+            <>
+              <Text>Search in Progress... </Text>
+              <ActivityIndicator size={"large"} style={styles.activityIndicator} />
+            </>
+          )
       ) : null}
     </ScrollView>
     </SafeAreaView>
@@ -260,11 +257,11 @@ const styles = StyleSheet.create({
     },
   textSearch: {  
     color: "white",
-  fontSize: 20,
-  lineHeight: 30,
-  fontWeight: "300",
-  textAlign: "center",
-  backgroundColor: "#000000c0",
+    fontSize: 20,
+    lineHeight: 30,
+    fontWeight: "300",
+    textAlign: "center",
+    backgroundColor: "#000000c0",
   },
   headlineContainer: {
     marginTop: 0,
@@ -344,4 +341,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
   },
+  activityIndicator: {
+    height: windowHeight / 4.8,
+    width: "100%",
+    alignSelf: "center",
+    alignItems: "center",
+    alignContent: "center"
+  }
 });
