@@ -43,6 +43,6 @@ You start the App via Expo:
 expo start
 ```
 
-Expo will open a browser window, please follow the instructions to use either a Simulator or your phone to run the App.
+Expo will open a browser window, please follow the instructions to use either a Simulator or your Phone to run the App.
 
 Have fun playing around!
