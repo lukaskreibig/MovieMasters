@@ -1,7 +1,7 @@
 # MovieMasters :movie_camera:
 
-**MovieMasters** :movie_camera: is a **Movie Database** for **Android** and **iOS** built with **React Native** and **GraphQL**. 
-You can search for Movie Titles, save them in your Favourites and hide them from future Searches.
+**MovieMasters** is a **Movie Database** :file_folder: for **Android** and **iOS** built with **React Native** and **GraphQL**. 
+You can search for Movie Titles, save them in your Favourites and hide them from future Movie Searches.
 
 ## Built with
 
