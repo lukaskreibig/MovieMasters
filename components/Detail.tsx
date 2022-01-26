@@ -12,27 +12,20 @@ import Toast from "react-native-root-toast";
 import { useState } from "react";
 import { useEffect } from "react";
 
-export default function Detail({ navigation, route }) {
+export default function Detail({ navigation, route }: any) {
   const [hidden, setHidden] = useState<boolean>(false);
   const [favourite, setFavourite] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("Favourites", route.params.favourites);
-    console.log(
-      "Already in Favourites?",
-      route.params.favourites.some((e) => e.id === route.params.id)
-    );
-    console.log(
-      "Not hidden?",
-      route.params.favourites.some((e) => e.id === route.params.id)
-    );
-
     route.params.favourites.some(
-      (e) => e.hide === true && e.id === route.params.id
+      (e: { id: number; hide: boolean }) =>
+        e.hide === true && e.id === route.params.id
     )
       ? setHidden(true)
       : setHidden(false);
-    route.params.favourites.some((e) => e.id === route.params.id)
+    route.params.favourites.some(
+      (e: { id: number }) => e.id === route.params.id
+    )
       ? setFavourite(true)
       : setFavourite(false);
   }, []);
@@ -47,7 +40,7 @@ export default function Detail({ navigation, route }) {
     }
   };
 
-  const storeData = async (value: any, hide: boolean) => {
+  const storeData = async (value: any, hide?: boolean) => {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(String(value.id), jsonValue);
@@ -174,33 +167,24 @@ const styles = StyleSheet.create({
     fontWeight: "200",
   },
   text: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "200",
-    marginTop: 14,
+    marginBottom: 14,
     color: "white",
     textAlign: "center",
     borderWidth: 0.5,
     borderColor: "white",
-    padding: 5,
+    padding: 12,
   },
   headerText: {
     color: "white",
     fontSize: 35,
     fontWeight: "100",
     marginTop: 20,
-    marginBottom: 30,
+    marginBottom: 25,
   },
   buttons: {
-    alignItems: "center",
-  },
-  input: {},
-  movies: {
-    height: 34,
-    flexWrap: "wrap",
-    textAlign: "center",
-  },
-  ratings: {
-    height: 15,
+    width: 200,
   },
   posterImage: {
     justifyContent: "flex-start",
@@ -218,10 +202,11 @@ const styles = StyleSheet.create({
   },
   textImage: {
     color: "white",
-    fontSize: 20,
-    lineHeight: 24,
+    fontSize: 22,
+    lineHeight: 25,
+    padding: 10,
     fontWeight: "200",
     textAlign: "center",
-    backgroundColor: "#000000c0",
+    backgroundColor: "#000000c9",
   },
 });

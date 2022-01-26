@@ -3,11 +3,8 @@ import {
   Text,
   TextInput,
   View,
-  Button,
   ActivityIndicator,
   ScrollView,
-  Pressable,
-  ImageBackground,
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
@@ -21,12 +18,12 @@ import Movie from "./Movie";
 
 const windowHeight = Dimensions.get("window").height;
 
-export default function Home({ navigation }) {
-  const [text, onChangeText] = useState("");
-  const [searchActive, setSearchActive] = useState(false);
+export default function Home({ navigation }: any) {
+  const [text, onChangeText] = useState<string>("");
+  const [searchActive, setSearchActive] = useState<boolean>(false);
   const [favourites, setFavourites] = useState<any>("");
-  const [hideIt, setHide] = useState();
-  const [isOffline, setOfflineStatus] = useState<any>(null);
+  const [hideIt, setHide] = useState<any>();
+  const [isOffline, setOfflineStatus] = useState<boolean | null>(null);
   const [textSearch, setTextSearch] = useState<string>("");
 
   const SEARCH_MOVIE = gql`
@@ -49,9 +46,7 @@ export default function Home({ navigation }) {
     },
   });
 
-  // console.log(loading, error, data)
-
-  const activateSearch = () => {
+  const activateSearch = (): void => {
     setSearchActive(true);
     setTextSearch(text);
     searchNow();
@@ -70,11 +65,11 @@ export default function Home({ navigation }) {
       : null;
   });
 
-  useEffect(() => {
+  useEffect((): void => {
     isOffline ? showToast("Whoops, seems like you are Offline.") : null;
   }, [isOffline]);
 
-  const importData = async () => {
+  const importData = async (): Promise<any> => {
     try {
       const keys = await AsyncStorage.getAllKeys();
       const result = await AsyncStorage.multiGet(keys);
@@ -87,7 +82,9 @@ export default function Home({ navigation }) {
   useEffect(() => {
     importData().then((data) => {
       setFavourites(data);
-      const hiddenMovies: any = data?.filter((obj) => obj.hide == true);
+      const hiddenMovies: any = data?.filter(
+        (obj: { hide: boolean }) => obj.hide == true
+      );
       setHide(hiddenMovies);
     });
   }, []);
@@ -181,14 +178,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "200",
   },
-  text: {
-    color: "white",
-    fontSize: 15,
-    lineHeight: 24,
-    fontWeight: "300",
-    textAlign: "center",
-    backgroundColor: "#000000c0",
-  },
   noFavourites: {
     color: "white",
     alignSelf: "center",
@@ -198,18 +187,8 @@ const styles = StyleSheet.create({
     fontWeight: "200",
     fontStyle: "italic",
   },
-  textSearch: {
-    color: "white",
-    fontSize: 20,
-    lineHeight: 30,
-    fontWeight: "300",
-    textAlign: "center",
-    backgroundColor: "#000000c0",
-  },
   headlineContainer: {
-    marginTop: 0,
     width: "100%",
-    flexDirection: "column",
     alignItems: "center",
   },
   headline: {
@@ -245,51 +224,11 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     fontWeight: "200",
+    paddingRight: 17,
   },
   input: {
     textAlign: "center",
     fontSize: 20,
     color: "white",
-  },
-  movies: {
-    height: 34,
-    flexWrap: "wrap",
-    textAlign: "center",
-    fontWeight: "600",
-    color: "white",
-  },
-  ratings: {
-    height: 15,
-    fontWeight: "300",
-    color: "white",
-  },
-  poster: {
-    width: windowHeight / 7.2,
-    height: windowHeight / 4.8,
-    justifyContent: "flex-end",
-  },
-  posterSearch: {
-    width: windowHeight / 3.6,
-    height: windowHeight / 2.4,
-    justifyContent: "flex-end",
-  },
-  favouriteThumb: {
-    padding: 6,
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
-  },
-  movieThumb: {
-    padding: 6,
-    justifyContent: "center",
-    alignItems: "center",
-    alignContent: "center",
-  },
-  activityIndicator: {
-    height: windowHeight / 4.8,
-    width: "100%",
-    alignSelf: "center",
-    alignItems: "center",
-    alignContent: "center",
   },
 });
