@@ -9,7 +9,8 @@ import {
   Pressable,
   ImageBackground,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity
 } from "react-native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,6 +26,7 @@ export default function Home({ navigation }) {
   const [favourites, setFavourites] = useState<any>("");
   const [hideIt, setHide] = useState();
   const [isOffline, setOfflineStatus] = useState<any>(null);
+  const [textSearch, setTextSearch] = useState<string>("")
 
   const SEARCH_MOVIE = gql`
     query SearchMovies($userSearch: String!) {
@@ -42,14 +44,15 @@ export default function Home({ navigation }) {
 
   const [searchNow, { loading, error, data }] = useLazyQuery(SEARCH_MOVIE, {
     variables: {
-      userSearch: text,
+      userSearch: textSearch,
     },
   });
 
   // console.log(loading, error, data)
 
   const activateSearch = () => {
-    setSearchActive(!searchActive);
+    setSearchActive(true);
+    setTextSearch(text)
     searchNow();
   };
 
@@ -86,10 +89,6 @@ export default function Home({ navigation }) {
       setHide(hiddenMovies);
     });
   }, []);
-
-  const navigateDetail = () => {
-
-  }
 
   return (
     <SafeAreaView style={{ backgroundColor: "black" }}>
@@ -158,13 +157,12 @@ export default function Home({ navigation }) {
             value={text}
           />
 
-          <Button
-            style={styles.button}
-            onPress={text ? activateSearch : null}
-            title="Submit"
-            color="white"
-            accessibilityLabel="Learn more about this purple button"
-          />
+          <TouchableOpacity onPress={() => {text ? activateSearch() : showToast("An Empty Search is not possible")}}>
+            <Text style={styles.button}>
+              Submit
+            </Text>
+          </TouchableOpacity>
+
         </>
       </View>
 
@@ -218,12 +216,11 @@ export default function Home({ navigation }) {
             </Text>
             </ScrollView>
           ) : (
-            <>
-              <Text>Search in Progress... </Text>
+            <View>
               <ActivityIndicator size={"large"} style={styles.activityIndicator} />
-            </>
+            </View>
           )
-      ) : null}
+      ) : <Text style={styles.noFavourites}> Use the Search to find Movies </Text>}
     </ScrollView>
     </SafeAreaView>
   );
@@ -302,6 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
   button: {
+    color: "white",
     fontSize: 20,
     fontWeight: "200",
   },
