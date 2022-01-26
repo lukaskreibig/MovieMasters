@@ -2,11 +2,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
   View,
-  Button,
-  ActivityIndicator,
-  Image,
   Pressable,
   ImageBackground,
   TouchableOpacity,
@@ -21,11 +17,19 @@ export default function Detail({ navigation, route }) {
   const [favourite, setFavourite] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log("Favourites", route.params.favourites)
-    console.log("Already in Favourites?", route.params.favourites.some((e) => e.id === route.params.id));
-    console.log("Not hidden?",route.params.favourites.some((e) => e.id === route.params.id))
+    console.log("Favourites", route.params.favourites);
+    console.log(
+      "Already in Favourites?",
+      route.params.favourites.some((e) => e.id === route.params.id)
+    );
+    console.log(
+      "Not hidden?",
+      route.params.favourites.some((e) => e.id === route.params.id)
+    );
 
-    route.params.favourites.some((e) => e.hide === true && e.id === route.params.id)
+    route.params.favourites.some(
+      (e) => e.hide === true && e.id === route.params.id
+    )
       ? setHidden(true)
       : setHidden(false);
     route.params.favourites.some((e) => e.id === route.params.id)
@@ -35,7 +39,7 @@ export default function Detail({ navigation, route }) {
 
   const triggerHidden = (hide: boolean) => {
     if (hide) {
-      showToast("Hide in Search");
+      showToast("Hidden in Search");
       setHidden(true);
     } else {
       showToast("Show in Search");
@@ -79,7 +83,7 @@ export default function Detail({ navigation, route }) {
     try {
       await AsyncStorage.clear();
       showToast("All Favourites have been removed");
-      setFavourite(false)
+      setFavourite(false);
     } catch (e) {
       showToast("You don't have any Favourites right now");
     }
@@ -94,7 +98,10 @@ export default function Detail({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainView}>
-        <Pressable style={styles.back} onPress={() => navigation.push("Home")}>
+        <Pressable
+          style={styles.back}
+          onPress={() => navigation.replace("Home")}
+        >
           <Text style={styles.backText}>X</Text>
         </Pressable>
         <Text style={styles.headerText}>Movie Details</Text>
@@ -115,29 +122,28 @@ export default function Detail({ navigation, route }) {
         <Text style={styles.headerText}>Options</Text>
 
         <View style={styles.buttons}>
+          <TouchableOpacity
+            onPress={() => (favourite ? removeData() : handleSaveData())}
+          >
+            <Text style={styles.text}>
+              Favourite: {favourite ? " Yes" : " No"}
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => (favourite ? removeData() : handleSaveData())}
-        >
-          <Text style={styles.text}>
-            Favourite: {favourite ? " Yes" : " No"}
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity onPress={() => clearStorage()}>
+            <Text style={styles.text}> Delete All Favourites </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => clearStorage()}>
-          <Text style={styles.text}> Delete All Favourites </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() =>
-            hidden ? handleSaveData(false, true) : handleSaveData(true, true)
-          }
-        >
-          <Text style={styles.text}>
-            Hide in Search: 
-            {hidden ? " Hidden" : " Visible"}
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              hidden ? handleSaveData(false, true) : handleSaveData(true, true)
+            }
+          >
+            <Text style={styles.text}>
+              Hide in Search:
+              {hidden ? " Hidden" : " Visible"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -175,14 +181,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderWidth: 0.5,
     borderColor: "white",
-    padding: 5
+    padding: 5,
   },
   headerText: {
     color: "white",
     fontSize: 35,
     fontWeight: "100",
     marginTop: 20,
-    marginBottom: 30
+    marginBottom: 30,
   },
   buttons: {
     alignItems: "center",
