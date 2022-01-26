@@ -80,7 +80,7 @@ export default function Home({ navigation }: any) {
     }
   };
 
-  useEffect(() => {
+  useEffect(() :void =>  {
     importData().then((data) => {
       setFavourites(data);
       const hiddenMovies: any = data?.filter(

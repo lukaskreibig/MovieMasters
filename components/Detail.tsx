@@ -8,10 +8,9 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
+import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-root-toast";
-import { useState } from "react";
-import { useEffect } from "react";
 
 export default function Detail({ navigation, route }: any) {
   const [hidden, setHidden] = useState<boolean>(false);
@@ -31,7 +30,7 @@ export default function Detail({ navigation, route }: any) {
       : setFavourite(false);
   }, []);
 
-  const triggerHidden = (hide: boolean) => {
+  const triggerHidden = (hide: boolean):void => {
     if (hide) {
       setHidden(true);
     } else {
