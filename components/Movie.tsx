@@ -6,13 +6,14 @@ import {
   Pressable,
   ImageBackground,
   Dimensions,
+  Platform
 } from "react-native";
 
 const windowHeight = Dimensions.get("window").height;
 
 export default function Movie(props: any) {
   return (
-    <ScrollView horizontal={true}>
+    <ScrollView horizontal={true} decelerationRate={"normal"}>
       <Text>
         {(props.hideIt === "favourite"
           ? props.favourites
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
     lineHeight: 24,
-    fontWeight: "300",
+    fontWeight: Platform.OS === 'android' ? "normal" : "300",
     textAlign: "center",
     backgroundColor: "#000000c0",
   },
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
     lineHeight: 30,
-    fontWeight: "300",
+    fontWeight: Platform.OS === 'android' ? "normal" : "300",
     textAlign: "center",
     backgroundColor: "#000000c0",
   },
