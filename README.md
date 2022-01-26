@@ -33,7 +33,7 @@ or
 yarn install
 ```
 
-By default, this command will install all modules listed as dependencies in package.json.
+This command will install all the neccessary modules.
 
 ## How to run :computer:
 
