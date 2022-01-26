@@ -8,21 +8,55 @@ import {
   ActivityIndicator,
   Image,
   Pressable,
+  ImageBackground
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-root-toast";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Detail({ navigation, route }) {
-  const storeData = async (value: any) => {
+
+  const [hidden, setHidden] = useState<boolean>(false)
+  const [favourite, setFavourite] = useState<boolean>(false)
+
+  useEffect(() => {
+    route.params.favourites.some(e => (e.hide  === true) && (e.id === route.params.id)) ? setHidden(true) : setHidden(false);
+    route.params.favourites.some(e => e.id === route.params.id) ? setFavourite(true) : setFavourite(false);
+    }, []);
+
+    const triggerHidden = (hide:boolean) => {
+      if (hide) {
+        showToast("Hide in Search")
+        setHidden(true)
+      } else {
+        showToast("Show in Search")
+        setHidden(false)
+      }
+    }
+
+  const storeData = async (value: any, hide:boolean) => {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(String(value.id), jsonValue);
-      alert("Data successfully saved");
+        setFavourite(true);
+        hide ? triggerHidden(value.hide) : showToast("Add to Favourites");
     } catch (e) {
-      alert("Failed to save the data to the storage");
+      showToast("Whoops, saving didn't work out");
     }
   };
 
-  const handleSaveData = async (toggle: boolean) => {
+  const removeData = async () => {
+    try {
+      await AsyncStorage.removeItem(String(route.params.id));
+      showToast("Removed from Favourites");
+      setFavourite(false)
+    } catch (e) {
+      showToast("Failed to remove from Favourites");
+    }
+  };
+
+  const handleSaveData = async (toggle?: boolean, hiding?:boolean) => {
     let movie = {
       id: route.params.id,
       original_title: route.params.title,
@@ -30,74 +64,69 @@ export default function Detail({ navigation, route }) {
       poster_path: route.params.poster,
       hide: toggle,
     };
-    storeData(movie);
+    storeData(movie, hiding);
   };
 
-  const removeData = async () => {
-    try {
-      await AsyncStorage.removeItem(String(route.params.id));
-    } catch (e) {
-      alert("Failed to remove the data from storage");
-    }
 
-    console.log("Done.");
-  };
+ 
 
   const clearStorage = async () => {
     try {
       await AsyncStorage.clear();
-      alert("Storage successfully cleared!");
+      showToast("All Favourites have been removed");
     } catch (e) {
-      alert("Failed to clear the async storage.");
+      showToast("Failed to remove all favourites from storage");
     }
   };
 
+  function showToast(message:string) {
+    Toast.show(message, {
+        duration: Toast.durations.LONG,
+      });
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Movie Details</Text>
-      <Text>{route.params.title}</Text>
-      <Text>{route.params.ratings}</Text>
-      <Image
-        style={styles.poster}
-        source={{
-          uri: "https://image.tmdb.org/t/p/w185" + route.params.poster,
-        }}
-      />
-      <Button
-        style={styles.button}
-        onPress={() => handleSaveData(false)}
-        title="Add to Favourites"
-        color="white"
-        accessibilityLabel="Learn more about this purple button"
-      />
-      <Button
-        style={styles.button}
-        onPress={() => removeData()}
-        title="Remove from Favourites"
-        color="white"
-        accessibilityLabel="Learn more about this purple button"
-      />
-      <Button
-        style={styles.button}
-        onPress={() => navigation.push("Home")}
-        title="Back to Main Screen"
-        color="white"
-        accessibilityLabel="Learn more about this purple button"
-      />
-      <Button
-        style={styles.button}
-        onPress={() => clearStorage()}
-        title="Delete All Favourites"
-        color="white"
-        accessibilityLabel="Learn more about this purple button"
-      />
-      <Button
-        style={styles.button}
-        onPress={() => handleSaveData(true)}
-        title="Hide from Search"
-        color="white"
-        accessibilityLabel="Learn more about this purple button"
-      />
+      <View style={styles.mainView}>
+        <Pressable style={styles.back} onPress={() => navigation.push("Home")}>
+          <Text style={styles.backText}>X</Text>
+        </Pressable>
+        <Text style={styles.headerText}>Movie Details</Text>
+
+        <ImageBackground
+                    style={styles.posterImage}
+                    imageStyle={{ borderRadius: 8}}
+                    source={{
+                      uri:
+                        "https://image.tmdb.org/t/p/w185" + route.params.poster,
+                    }} 
+                  >
+                    <Text style={styles.textImage} numberOfLines={3}>
+                  {route.params.title} {"\n"} IMDB: {route.params.ratings ? route.params.ratings : "N/A"}</Text>
+                    </ImageBackground>
+
+            <Pressable onPress={() => favourite ? removeData() : handleSaveData()}>
+           <Text style={styles.text}> 
+             Toggle Favourites
+             {"\n"}
+             Status: 
+           { favourite ? (" Yes") : (" No")}
+           </Text>
+        </Pressable>
+
+        <Pressable onPress={() => clearStorage()}>
+           <Text style={styles.text}> Delete All Favourites </Text>
+        </Pressable>
+
+        <Pressable onPress={() => hidden ? handleSaveData(false, true) : handleSaveData(true, true)}>
+           <Text style={styles.text}> 
+             Toggle Movie Search Hiding
+             {"\n"}
+             Status: 
+           { hidden ? (" Hidden") : (" Visible")}
+           </Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
@@ -107,16 +136,38 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     width: "100%",
     height: "100%",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+  },
+  mainView: {
+    width: "80%",
+    height: "100%",
     alignSelf: "center",
-    paddingBottom: 10,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  back: {
+    width: "100%"
+  },
+  backText: {
+    color: "white",
+    textAlign: "right",
+    fontSize: 30,
+    fontWeight: "200"
+  },
+  text: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "200"
+  },
+  headerText: {
+    color: "white",
+    fontSize: 35,
+    fontWeight: "100"
+  },
+  button: {
+    textAlign: "right",
   },
   input: {},
-  button: {
-    height: 40,
-  },
   movies: {
     height: 34,
     flexWrap: "wrap",
@@ -125,9 +176,10 @@ const styles = StyleSheet.create({
   ratings: {
     height: 15,
   },
-  poster: {
-    width: 100,
-    height: 150,
+  posterImage: {
+    justifyContent: "flex-start",
+    width: 200,
+    height: 300,
   },
   movieThumb: {
     flexDirection: "column",
@@ -138,4 +190,12 @@ const styles = StyleSheet.create({
     height: 300,
     width: "30%",
   },
+  textImage: {  
+    color: "white",
+    fontSize: 20,
+    lineHeight: 24,
+    fontWeight: "200",
+    textAlign: "center",
+    backgroundColor: "#000000c0",
+    },
 });

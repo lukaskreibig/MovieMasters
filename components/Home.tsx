@@ -87,6 +87,10 @@ export default function Home({ navigation }) {
     });
   }, []);
 
+  const navigateDetail = () => {
+
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: "black" }}>
     <ScrollView style={styles.scrollview}>
@@ -114,6 +118,7 @@ export default function Home({ navigation }) {
                       title: movie.original_title,
                       poster: movie.poster_path,
                       ratings: movie.vote_average,
+                      favourites: favourites
                     })
                   }
                 >
@@ -128,9 +133,6 @@ export default function Home({ navigation }) {
                     <Text style={styles.text} numberOfLines={3}>
                   {movie.original_title} {"\n"} IMDB: {movie.vote_average ? movie.vote_average : "N/A"}</Text>
                     </ImageBackground>
-
-
-
                 </Pressable>
               </View>
             ))}
@@ -186,6 +188,7 @@ export default function Home({ navigation }) {
                           title: movie.original_title,
                           poster: movie.poster_path,
                           ratings: movie.vote_average,
+                          favourites: favourites
                         })
                       }
                     >
