@@ -108,11 +108,11 @@ export default function Home({ navigation }) {
 
           <Text>
             <ScrollView horizontal={true}>
-            {favourites.map((movie) => (
-              <View style={styles.favouriteThumb}>
+            {favourites.map((movie:any, index:number) => (
+              <View style={styles.favouriteThumb} key={index}>
                 <Pressable
                   onPress={() =>
-                    navigation.navigate("Detail", {
+                    navigation.replace("Detail", {
                       id: movie.id,
                       title: movie.original_title,
                       poster: movie.poster_path,
@@ -177,11 +177,11 @@ export default function Home({ navigation }) {
                       (hidden) => (hidden.hide ? hidden.id : null) === obj.id
                     )
                 )
-                .map((movie) => (
-                  <View style={styles.movieThumb}>
+                .map((movie:any, index:number) => (
+                  <View style={styles.movieThumb} key={index}>
                     <Pressable
                       onPress={() =>
-                        navigation.navigate("Detail", {
+                        navigation.replace("Detail", {
                           id: movie.id,
                           title: movie.original_title,
                           poster: movie.poster_path,

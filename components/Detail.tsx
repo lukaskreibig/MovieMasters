@@ -21,9 +21,11 @@ export default function Detail({ navigation, route }) {
   const [favourite, setFavourite] = useState<boolean>(false);
 
   useEffect(() => {
-    route.params.favourites.some(
-      (e) => e.hide === true && e.id === route.params.id
-    )
+    console.log("Favourites", route.params.favourites)
+    console.log("Already in Favourites?", route.params.favourites.some((e) => e.id === route.params.id));
+    console.log("Not hidden?",route.params.favourites.some((e) => e.id === route.params.id))
+
+    route.params.favourites.some((e) => e.hide === true && e.id === route.params.id)
       ? setHidden(true)
       : setHidden(false);
     route.params.favourites.some((e) => e.id === route.params.id)
