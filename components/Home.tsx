@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headline: {
-    marginTop: Platform.OS === "android" ? 35 : 20,
+    marginTop: Platform.OS === "android" ? 35 : 0,
     fontSize: Platform.OS === "android" ? 35 : 50,
     fontWeight: Platform.OS === "android" ? "normal" : "100",
     color: "white",
