@@ -74,7 +74,7 @@ export default function Home({ navigation }: any) {
     try {
       const keys = await AsyncStorage.getAllKeys();
       const result = await AsyncStorage.multiGet(keys);
-      return result.map((req) => JSON.parse(req[1]));
+      return result.map((req:any) => JSON.parse(req[1]));
     } catch (error) {
       console.error(error);
     }
