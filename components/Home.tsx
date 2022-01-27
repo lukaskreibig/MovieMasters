@@ -59,7 +59,7 @@ export default function Home({ navigation }: any) {
     });
   }
   const unsubscribe = NetInfo.addEventListener((state) => {
-    !(state.isConnected && state.isInternetReachable) && !isOffline
+    (!state.isConnected && !state.isInternetReachable) && !isOffline
       ? setOfflineStatus(true)
       : state.isConnected && state.isInternetReachable && isOffline
       ? setOfflineStatus(false)
