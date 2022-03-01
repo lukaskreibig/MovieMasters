@@ -21,7 +21,7 @@ You can search for Movie Titles, save them in your Favourites and hide them from
 
 ---
 
-## Screenshots
+## Examples
 
 ![Movie Master Screenshot](https://www.lukaskreibig.com/wp-content/uploads/6.png)
 
