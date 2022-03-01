@@ -1,7 +1,6 @@
 # MovieMasters :movie_camera:
 
-**MovieMasters** is a **Movie Database** :file_folder: for **Android** and **iOS** built with **React Native** and **GraphQL**. 
-You can search for Movie Titles, save them in your Favourites and hide them from future Movie Searches.
+**MovieMasters** is a small, self-made **Movie Database App** for Android and iOS (recommended) built with **React Native** / Expo and GraphQL using JS / Typescript and Async Storage. I implemented a Search for Movies, which uses an external Movie Database (GraphQL). You can save your Favourites locally and they will be remembered after you restarted your App (AsyncStorage). You can also hide Movies from Future Searches.
 
 ---
 
