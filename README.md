@@ -24,9 +24,10 @@ You can search for Movie Titles, save them in your Favourites and hide them from
 ## Screenshots
 
 ![Movie Master Screenshot](https://www.lukaskreibig.com/wp-content/uploads/6.png)
-![Movie Master Movie](https://user-images.githubusercontent.com/78150333/156174892-7885cef4-7286-4d63-8979-46f4a7dcf914.mp4)
 
 ---
+
+https://user-images.githubusercontent.com/78150333/156174892-7885cef4-7286-4d63-8979-46f4a7dcf914.mp4
 
 ## Installation
 
